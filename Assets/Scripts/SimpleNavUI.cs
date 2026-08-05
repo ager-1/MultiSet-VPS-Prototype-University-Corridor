@@ -1,12 +1,6 @@
 using UnityEngine;
 using TMPro;
 using MultiSet;
-
-/**
- * Minimal navigation UI: shows remaining distance and an arrival message.
- * Works directly with NavigationController + PathEstimationUtils,
- * bypassing NavigationUIController's list/panel dependencies.
- */
 public class SimpleNavUI : MonoBehaviour
 {
     [Tooltip("Label to show remaining distance")]
@@ -26,13 +20,11 @@ public class SimpleNavUI : MonoBehaviour
 
     void Start()
     {
-        // Listen for arrival, fired from NavigationController's UnityEvent
         NavigationController.instance.DestinationArrived.AddListener(OnArrived);
 
         SetNavigatingUI(false);
         if (arrivedMessage != null) arrivedMessage.SetActive(false);
     }
-
     void Update()
     {
         bool navigating = NavigationController.instance.IsCurrentlyNavigating();
@@ -55,13 +47,10 @@ public class SimpleNavUI : MonoBehaviour
             if (remainingDistance != null) remainingDistance.text = "";
         }
     }
-
     void SetNavigatingUI(bool isVisible)
     {
         if (stopButton != null) stopButton.SetActive(isVisible);
     }
-
-    // Called on stop button's OnClick()
     public void OnStopPressed()
     {
         NavigationController.instance.StopNavigation();

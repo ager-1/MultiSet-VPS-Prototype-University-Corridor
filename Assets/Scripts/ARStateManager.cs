@@ -13,40 +13,31 @@ public class ARStateManager : MonoBehaviour
     public GameObject trackingLostUI;
 
     [Header("Navigation Integration")]
-    public VPSNavManager vpsNavManager; // Added reference
+    public VPSNavManager vpsNavManager; 
 
     void Start()
     {
         SetState(ARState.Initialising);
     }
-
-    // Wire to MapLocalizationManager -> Localization Init () and Localization Requested ()
     public void OnLocalizationInit()
     {
         SetState(ARState.Scanning);
     }
-
-    // Wire to MapLocalizationManager -> Localization Success ()
     public void OnLocalizationSuccess()
     {
         SetState(ARState.Localised);
-
-        // Trigger the NavMesh bake and Agent placement sequence
         if (vpsNavManager != null)
         {
             vpsNavManager.PlaceAgentOnNavMesh();
         }
     }
-
-    // Wire to MapLocalizationManager -> Localization Failure ()
     public void OnLocalizationFailure()
     {
         if (currentState == ARState.Localised)
             SetState(ARState.TrackingLost);
         else
-            SetState(ARState.Scanning); // still trying initial lock, keep showing Scanning
+            SetState(ARState.Scanning);
     }
-
     void SetState(ARState newState)
     {
         currentState = newState;
