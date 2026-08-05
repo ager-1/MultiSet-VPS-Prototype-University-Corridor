@@ -12,6 +12,9 @@ public class ARStateManager : MonoBehaviour
     public GameObject localisedUI;
     public GameObject trackingLostUI;
 
+    [Header("Navigation Integration")]
+    public VPSNavManager vpsNavManager; // Added reference
+
     void Start()
     {
         SetState(ARState.Initialising);
@@ -27,6 +30,12 @@ public class ARStateManager : MonoBehaviour
     public void OnLocalizationSuccess()
     {
         SetState(ARState.Localised);
+
+        // Trigger the NavMesh bake and Agent placement sequence
+        if (vpsNavManager != null)
+        {
+            vpsNavManager.PlaceAgentOnNavMesh();
+        }
     }
 
     // Wire to MapLocalizationManager -> Localization Failure ()
@@ -42,7 +51,6 @@ public class ARStateManager : MonoBehaviour
     {
         currentState = newState;
         Debug.Log("AR State changed to: " + newState);
-
         if (initialisingUI != null) initialisingUI.SetActive(newState == ARState.Initialising);
         if (scanningUI != null) scanningUI.SetActive(newState == ARState.Scanning);
         if (localisedUI != null) localisedUI.SetActive(newState == ARState.Localised);
