@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class POIButtonBinder : MonoBehaviour
 {
-    public POI targetPOI;   // drag the matching Room POI object here
+    public POI targetPOI;
 
     void Start()
     {
